@@ -1,9 +1,10 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import SearchInput, { createFilter } from 'react-search-input';
+// import SearchInput, { createFilter } from 'react-search-input';
 
-function Users({ title, searchTerm }) {
+function Users({ title }) {
     const [users, setUsers] = useState([]);
+    const [nameToSearch, setNameToSearch] = useState('')
 
     const fetchData = () => {
         try {
@@ -20,17 +21,30 @@ function Users({ title, searchTerm }) {
         fetchData();
     }, []);
 
-    const KEYS_TO_FILTERS = ['name'];
+    const handleSearch = (e) => {
+      setNameToSearch(e.target.value);
+      users.filter((user) => {
+        if(user.name === e.target.value){
+            return user.name
+        } else {return 'No Users Found!'}
+      })
+    }
 
-    const filterUsers = createFilter(searchTerm, KEYS_TO_FILTERS);
+    // const KEYS_TO_FILTERS = ['name'];
 
-    const filteredUsers = users.filter(filterUsers);
+    // const filterUsers = createFilter(searchTerm, KEYS_TO_FILTERS);
+
+    // const filteredUsers = users.filter(filterUsers);
 
     return (
         <>
+        <label htmlFor='search'>
+          Search
+          <input id='search' type='text' placeholder='Enter a name to search' onChange={handleSearch} />
+        </label>
             <h1>{title}</h1>
             <ul>
-                {filteredUsers.map((user) => (
+                {users.map((user) => (
                     <li key={user.id}>{user.name}</li>
                 ))}
             </ul>

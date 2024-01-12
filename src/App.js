@@ -1,20 +1,20 @@
 import { useState } from 'react';
 import Users from './users';
-import SearchInput, { createFilter } from 'react-search-input'
+// import SearchInput, { createFilter } from 'react-search-input'
 
 
 function App() {
 
-  const [searchTerm, setSearchTerm] = useState('');
+  // const [searchTerm, setSearchTerm] = useState('');
 
-  const handleSearchChange = (term) => {
-    setSearchTerm(term);
-  };
+  // const handleSearchChange = (term) => {
+  //   setSearchTerm(term);
+  // };
 
   return (
     <>
-      <SearchInput onChange={handleSearchChange} />
-      <Users title='List of Users' searchTerm={searchTerm} />
+      {/* <SearchInput onChange={handleSearchChange} /> */}
+      <Users title='List of Users' />
     </>
   );
 }
