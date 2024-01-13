@@ -14,7 +14,7 @@ function App() {
   return (
     <>
       {/* <SearchInput onChange={handleSearchChange} /> */}
-      <Users title='List of Users' />
+      <Users title='List of Users' searchTitle='Search' />
     </>
   );
 }

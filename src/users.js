@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 // import SearchInput, { createFilter } from 'react-search-input';
 
-function Users({ title }) {
+function Users({ title, searchTitle }) {
     const [users, setUsers] = useState([]);
     const [nameToSearch, setNameToSearch] = useState('')
     const [filteredUsers, setFilteredUsers] = useState([]);
@@ -44,7 +44,7 @@ function Users({ title }) {
     return (
         <>
             <label htmlFor='search'>
-                Search
+                {searchTitle}
                 <input id='search' type='text' placeholder='Enter a name to search' onChange={handleSearch} value={nameToSearch} />
             </label>
             <h1>{title}</h1>
