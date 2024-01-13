@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 function Users({ title }) {
     const [users, setUsers] = useState([]);
     const [nameToSearch, setNameToSearch] = useState('')
+    const [filteredUsers, setFilteredUsers] = useState([]);
 
     const fetchData = () => {
         try {
@@ -22,13 +23,17 @@ function Users({ title }) {
     }, []);
 
     const handleSearch = (e) => {
-      setNameToSearch(e.target.value);
-      users.filter((user) => {
-        if(user.name === e.target.value){
-            return user.name
-        } else {return 'No Users Found!'}
-      })
+        // const searchTerm = e.target.value.toLowerCase()
+        setNameToSearch(e.target.value.toLowerCase());
+
+        if (nameToSearch.length > 0) {
+            const filtered = users.filter((user) => user.name.toLowerCase().includes(e.target.value.toLowerCase()))
+            setFilteredUsers(filtered)
+        } else {
+            setFilteredUsers([])
+        }
     }
+
 
     // const KEYS_TO_FILTERS = ['name'];
 
@@ -38,15 +43,18 @@ function Users({ title }) {
 
     return (
         <>
-        <label htmlFor='search'>
-          Search
-          <input id='search' type='text' placeholder='Enter a name to search' onChange={handleSearch} />
-        </label>
+            <label htmlFor='search'>
+                Search
+                <input id='search' type='text' placeholder='Enter a name to search' onChange={handleSearch} value={nameToSearch} />
+            </label>
             <h1>{title}</h1>
             <ul>
-                {users.map((user) => (
-                    <li key={user.id}>{user.name}</li>
-                ))}
+                {nameToSearch.length === 0
+                    ? users.map((user) => <li key={user.id}>{user.name}</li>)
+                    : filteredUsers.length > 0
+                        ? filteredUsers.map((user) => <li key={user.id}>{user.name}</li>)
+                        : <li>No Users Found!</li>
+                }
             </ul>
         </>
     );
