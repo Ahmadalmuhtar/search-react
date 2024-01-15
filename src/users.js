@@ -1,23 +1,16 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-// import SearchInput, { createFilter } from 'react-search-input';
 
 function Users({ title, searchTitle }) {
-    const [users, setUsers] = useState([]);
+    const [users, setUsers] = useState([])
     const [nameToSearch, setNameToSearch] = useState('')
-    const [filteredUsers, setFilteredUsers] = useState([]);
-    const [filterLetter, setFilterLetter] = useState('');
-    const [filteredUsersByLetter, setFilteredUsersByLetter] = useState([])
+    const [letterToFilter, setLetterToFilter] = useState('')
 
     const fetchData = () => {
-        try {
-            axios.get("https://jsonplaceholder.typicode.com/users")
-                .then((response) => {
-                    setUsers(response.data);
-                })
-        } catch (error) {
-            console.error("Error fetching data:", error);
-        }
+        axios.get("https://jsonplaceholder.typicode.com/users")
+            .then((response) => setUsers(response.data))
+            .then(console.log(users))
+            .catch((err) => console.error('Error fetching Data!', err))
     };
 
     useEffect(() => {
@@ -25,30 +18,24 @@ function Users({ title, searchTitle }) {
     }, []);
 
     const handleSearch = (e) => {
-        // const searchTerm = e.target.value.toLowerCase()
-        setNameToSearch(e.target.value.toLowerCase());
-
-        if (nameToSearch.length > 0) {
-            const filtered = users.filter((user) => user.name.toLowerCase().includes(e.target.value.toLowerCase()))
-            setFilteredUsers(filtered)
-        } else {
-            setFilteredUsers([])
+        const newName = e.target.value.toLowerCase()
+        setNameToSearch(newName)
+        if (newName.length > 0) {
+            const searchedUsers = users.filter((user) => user.name.toLowerCase().includes(newName)) // تنقلت أخر 2 فانكشينز
+            setUsers(searchedUsers)
         }
     }
 
     const handleFilter = (e) => {
-        const letter = e.target.value
-        setFilterLetter(letter)
-        const alphabetFiltered = users.filter((user) => user.name[0].toUpperCase() === letter)
-        setFilteredUsersByLetter(alphabetFiltered)
+        const filterLetter = e.target.value.toUpperCase()
+        setLetterToFilter(filterLetter)
+        if (filterLetter !== '') {
+            const filteredUsers = users.filter((user) => user.name[0].toUpperCase().match(filterLetter))
+            setUsers(filteredUsers)
+        }
+        console.log(filterLetter)
     }
 
-
-    // const KEYS_TO_FILTERS = ['name'];
-
-    // const filterUsers = createFilter(searchTerm, KEYS_TO_FILTERS);
-
-    // const filteredUsers = users.filter(filterUsers);
 
     return (
         <>
@@ -59,7 +46,7 @@ function Users({ title, searchTitle }) {
             <label htmlFor="filter">
                 Filter
             </label>
-            <select id="filter" name="alphabeticalFilter" onChange={handleFilter} value={filterLetter}>
+            <select id="filter" name="alphabeticalFilter" onChange={handleFilter} value={letterToFilter} >
                 <option value="A">A</option>
                 <option value="B">B</option>
                 <option value="C">C</option>
@@ -90,7 +77,7 @@ function Users({ title, searchTitle }) {
             <h1>{title}</h1>
             <ul>
                 {
-                    filteredUsersByLetter.map((user) => <li key={user.id}>{user.name}</li>)
+                    users.map((user) => <li key={user.id}>{user.name}</li>)
                 }
             </ul>
         </>
