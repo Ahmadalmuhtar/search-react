@@ -5,6 +5,11 @@ function Users({ title, searchTitle }) {
     const [users, setUsers] = useState([])
     const [nameToSearch, setNameToSearch] = useState('')
     const [letterToFilter, setLetterToFilter] = useState('')
+    const [listOfSearchedUsers, setListOfSearchedUsers] = useState([])
+
+    useEffect(() => {
+        fetchData();
+    }, []);
 
     const fetchData = () => {
         axios.get("https://jsonplaceholder.typicode.com/users")
@@ -13,17 +18,14 @@ function Users({ title, searchTitle }) {
             .catch((err) => console.error('Error fetching Data!', err))
     };
 
-    useEffect(() => {
-        fetchData();
-    }, []);
-
     const handleSearch = (e) => {
         const newName = e.target.value.toLowerCase()
         setNameToSearch(newName)
         if (newName.length > 0) {
             const searchedUsers = users.filter((user) => user.name.toLowerCase().includes(newName)) // تنقلت أخر 2 فانكشينز
-            setUsers(searchedUsers)
+            setListOfSearchedUsers(searchedUsers)
         }
+        console.log(listOfSearchedUsers)
     }
 
     const handleFilter = (e) => {
@@ -31,17 +33,21 @@ function Users({ title, searchTitle }) {
         setLetterToFilter(filterLetter)
         if (filterLetter !== '') {
             const filteredUsers = users.filter((user) => user.name[0].toUpperCase().match(filterLetter))
-            setUsers(filteredUsers)
+            setListOfSearchedUsers(filteredUsers)
         }
-        console.log(filterLetter)
     }
-
 
     return (
         <>
             <label htmlFor='search'>
                 {searchTitle}
-                <input id='search' type='text' placeholder='Enter a name to search' onChange={handleSearch} value={nameToSearch} />
+                <input
+                    id='search'
+                    type='text'
+                    placeholder='Enter a name to search'
+                    onChange={handleSearch}
+                    value={nameToSearch}
+                />
             </label>
             <label htmlFor="filter">
                 Filter
@@ -77,7 +83,9 @@ function Users({ title, searchTitle }) {
             <h1>{title}</h1>
             <ul>
                 {
-                    users.map((user) => <li key={user.id}>{user.name}</li>)
+                    listOfSearchedUsers.length === 0
+                        ? users.map((user) => <li key={user.id}>{user.name}</li>)
+                        : listOfSearchedUsers.map((user) => <li key={user.id}>{user.name}</li>)
                 }
             </ul>
         </>
